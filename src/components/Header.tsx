@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 // Assets
 import logo from "../assets/images/eco-logo.png";
 import user_icon from "../assets/images/user-icon.png";
+import { selectTotalAmount } from "../redux/selectors";
 // Components
 import { Link, NavLink } from "react-router-dom";
 import Icons from "./Icons";
@@ -26,11 +28,11 @@ const menu_items = [
 
 const Header = () => {
   const [showMenu, setShowMenu] = useState<boolean>(false);
-
+  const totalAmount = useSelector(selectTotalAmount);
   return (
-    <header>
-      <div className="container">
-        <nav className="flex justify-between items-center py-5">
+    <header className="h-[80px]">
+      <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-40">
+        <div className="container flex justify-between items-center py-5">
           <Link to="/" className="flex gap-1 items-center">
             <img src={logo} alt="" className="w-6 h-auto" />
             <span className="font-bold">Multimart</span>
@@ -61,7 +63,7 @@ const Header = () => {
             <NavLink to="/cart" className="relative">
               <Icons.Bag />
               <span className="absolute top-0 right-0 translate-x-3/4 -translate-y-3/4 w-5 h-5 rounded-[50%] flex justify-center items-center text-sm text-white bg-red-600">
-                10
+                {totalAmount}
               </span>
             </NavLink>
             <NavLink to="/info" className="relative">
@@ -77,8 +79,8 @@ const Header = () => {
           >
             <Icons.Bars></Icons.Bars>
           </button>
-        </nav>
-      </div>
+        </div>
+      </nav>
     </header>
   );
 };

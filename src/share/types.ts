@@ -12,4 +12,13 @@ interface Product {
   }[];
   avgRating: number;
 }
-export type { Product };
+
+interface CartItem {
+  id: string;
+  productName: string;
+  image: string;
+  price: number;
+  quantity: number;
+  totalPrice: number;
+}
+export type { Product, CartItem };

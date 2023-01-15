@@ -1,6 +1,9 @@
 import React from "react";
-// Assets
+import { useDispatch } from "react-redux";
+// Types
 import { Product } from "../share/types";
+// Assets
+import { addItem } from "../redux/slices/cartSlice";
 // Components
 import { Link } from "react-router-dom";
 
@@ -9,6 +12,7 @@ interface PropsProductCard {
 }
 
 const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
+  const dispatch = useDispatch();
   return (
     <div className="basis-1/4 flex flex-col">
       <div className="mx-2 mb-10">
@@ -31,7 +35,12 @@ const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
           <span className="text-sm">{product.category}</span>
           <div className="mt-5 flex justify-between px-4">
             <span className="font-medium">${product.price}</span>
-            <button className="w-6 h-6 rounded-[50%] flex justify-center items-center bg-black text-white text-xl">
+            <button
+              className="w-6 h-6 rounded-[50%] flex justify-center items-center bg-black text-white text-xl"
+              onClick={() => {
+                dispatch(addItem(product));
+              }}
+            >
               +
             </button>
           </div>

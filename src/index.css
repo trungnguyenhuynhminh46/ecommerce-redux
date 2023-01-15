@@ -41,6 +41,10 @@
     @apply font-semibold text-3xl text-center mt-[100px];
   }
 
+  .custom-select {
+    @apply border-none outline-none p-4 bg-deep-blue text-white rounded;
+  }
+
   .footer--heading {
     @apply font-semibold text-lg mb-8;
   }

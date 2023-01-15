@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import products from "../../../assets/data/products";
 import { Product } from "../../../share/types";
 // Components
-import ProductCard from "../../../components/ProductCard";
+import ProductsList from "../../../components/ProductsList";
 
 const NewArrivals = () => {
   // States
@@ -20,9 +20,7 @@ const NewArrivals = () => {
     <>
       <h1 className="header">New Arrivals</h1>
       <div className="grid-layout">
-        {filteredProducts.map((product) => {
-          return <ProductCard key={product.id} product={product} />;
-        })}
+        <ProductsList products={filteredProducts} />
       </div>
     </>
   );
