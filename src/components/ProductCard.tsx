@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 // Types
 import { Product } from "../share/types";
 // Assets
-import { addItem } from "../redux/slices/cartSlice";
+import { addOneItem } from "../redux/slices/cartSlice";
 // Components
 import { Link } from "react-router-dom";
 
@@ -38,7 +38,7 @@ const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
             <button
               className="w-6 h-6 rounded-[50%] flex justify-center items-center bg-black text-white text-xl"
               onClick={() => {
-                dispatch(addItem(product));
+                dispatch(addOneItem(product));
               }}
             >
               +

@@ -57,8 +57,8 @@ const Shop = () => {
     }
 
     setProductsList(filteredProductsList);
-    console.log([category, sort, search]);
   }, [category, sort, search]);
+
   // Handlers
   const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
@@ -74,31 +74,36 @@ const Shop = () => {
     <section>
       <Common title="Products" />
       {/* Actions */}
-      <div className="container flex gap-[160px] py-20">
-        <select
-          name="category"
-          id="category"
-          className="custom-select"
-          value={category}
-          onChange={handleCategoryChange}
-        >
-          <option value="">Filter By Category</option>
-          <option value="sofa">Sofa</option>
-          <option value="mobile">Mobile</option>
-          <option value="chair">Chair</option>
-          <option value="watch">Watch</option>
-          <option value="wireless">Wireless</option>
-        </select>
-        <select
-          name="sort"
-          id="sort"
-          className="custom-select"
-          value={sort}
-          onChange={handleSortChange}
-        >
-          <option value="asc">Ascending</option>
-          <option value="desc">Descending</option>
-        </select>
+      <div className="container flex flex-col gap-10 py-20 md:flex-row md:gap-40">
+        <div className="flex gap-10 justify-between md:justify-start">
+          {/* category */}
+          <select
+            name="category"
+            id="category"
+            className="custom-select"
+            value={category}
+            onChange={handleCategoryChange}
+          >
+            <option value="">Filter By Category</option>
+            <option value="sofa">Sofa</option>
+            <option value="mobile">Mobile</option>
+            <option value="chair">Chair</option>
+            <option value="watch">Watch</option>
+            <option value="wireless">Wireless</option>
+          </select>
+          {/* asc, desc */}
+          <select
+            name="sort"
+            id="sort"
+            className="custom-select"
+            value={sort}
+            onChange={handleSortChange}
+          >
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
+        {/* search */}
         <div className="relative flex-1 p-4 rounded border border-solid border-gray-200">
           <input
             type="text"

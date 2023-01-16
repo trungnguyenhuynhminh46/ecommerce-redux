@@ -4,7 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
+svg.star-svg {
+  @apply inline;
+}
+
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     margin: 0;
     padding: 0;
@@ -51,5 +59,13 @@
 
   .footer--link {
     @apply text-sm transition-all duration-300 ease-linear border-b border-transparent border-solid hover:border-white;
+  }
+
+  .tab {
+    @apply inline-block py-2 px-4 cursor-pointer;
+  }
+
+  .tab.active {
+    @apply font-semibold;
   }
 }
