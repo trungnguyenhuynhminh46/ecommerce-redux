@@ -39,12 +39,9 @@ const Cart = () => {
         <div className="basis-1/3 flex flex-col gap-5 mt-10 ml-10">
           <div className="flex justify-between">
             <span className="text-lg font-semibold">Subtotal</span>
-            <span className="text-2xl font-bold">$1812</span>
+            <span className="text-2xl font-bold">${totalPayment}</span>
           </div>
-          <p className="text-sm text-gray-400">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero,
-            voluptate.
-          </p>
+          <p className="text-sm text-gray-400">Taxes and shipping</p>
           <div className="flex justify-between">
             <button className="py-2 px-4 bg-deep-blue text-white rounded">
               Continue Shopping

@@ -66,8 +66,8 @@ const Header = () => {
                 {totalAmount}
               </span>
             </NavLink>
-            <NavLink to="/info" className="relative">
-              <img src={user_icon} alt="" className="w-10 h-10 rounded-[50%]" />
+            <NavLink to="/login" className="relative">
+              <img src={user_icon} alt="" className="w-8 h-8 rounded-[50%]" />
             </NavLink>
           </div>
           <button

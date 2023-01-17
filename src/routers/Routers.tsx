@@ -7,7 +7,8 @@ import {
   Login,
   ProductDetails,
   Shop,
-  SignUp,
+  Register,
+  Reset,
 } from "../pages";
 import { Routes, Route, Navigate } from "react-router-dom";
 
@@ -20,7 +21,8 @@ const Routers = () => {
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<CheckOut />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/reset" element={<Reset />} />
     </Routes>
   );
 };

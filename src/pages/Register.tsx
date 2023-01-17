@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import loginImg from "../assets/images/login.png";
-import { Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { FieldValues, useForm } from "react-hook-form";
-// Components
+import registerImg from "../assets/images/register.png";
+import { Link } from "react-router-dom";
 import Icons from "../components/Icons";
+import { useForm, FieldValues } from "react-hook-form";
 import Input from "../components/Input";
+import { storage } from "../share/firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const schema = yup
   .object({
@@ -21,16 +22,41 @@ const schema = yup
   })
   .required();
 
-const Login = () => {
-  // States
+const Register = () => {
+  // State
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [imageURL, setImageURL] = useState<string>("");
   // Handlers
   const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
   const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+  const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const image = e.target.files[0];
+
+    const storageRef = ref(storage, "avatars/" + image.name);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+    // Handle upload image
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      () => {
+        // Handle successful uploads on complete
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          // console.log("File available at", downloadURL);
+          setImageURL(downloadURL);
+        });
+      }
+    );
   };
 
   // React hook form
@@ -46,35 +72,24 @@ const Login = () => {
 
   const onSubmit = handleSubmit(async (data: FieldValues) => {
     try {
-      console.log(data);
+      console.log(data, imageURL);
     } catch (err) {}
   });
-
   return (
     <section>
       <div className="container">
         <div className="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 py-16">
-          <div className="flex items-center">
-            <img
-              src={loginImg}
-              alt=""
-              className="max-w-[80%] md:max-w-full max-auto"
-            />
-          </div>
           {/* Form */}
           <form
             action="#"
-            className="flex flex-col justify-center"
+            className="flex flex-col justify-center gap-2"
             onSubmit={onSubmit}
           >
-            <h1 className="text-2xl font-bold mb-2">Hey, hello👋</h1>
+            <h1 className="text-2xl font-bold">Register</h1>
             <p className="text-sm text-gray-300 mb-4">
-              Enter the information you entered while registering
-            </p>
-            <p className="text-sm text-gray-300 mb-4">
-              You don't have account yet?{" "}
-              <Link to="/register" className="font-semibold text-black">
-                Create one
+              Already have an account,{" "}
+              <Link to="/login" className="font-semibold text-black">
+                Login
               </Link>
             </p>
             <div className="input-group">
@@ -109,28 +124,35 @@ const Login = () => {
                 </p>
               </div>
             </div>
-            <div className="flex justify-end py-2">
-              <Link to="/reset">Forgot password?</Link>
+            <div className="input-group">
+              <label htmlFor="avatar">Avatar</label>
+              <input
+                type="file"
+                accept="image/*"
+                name="avatar"
+                id="avatar"
+                onChange={handleUploadImage}
+              />
             </div>
             <button
               type="submit"
-              className="w-full py-2 px-4 rounded bg-deep-blue text-white font-medium outline-none"
+              className="w-full py-2 px-4 mt-2 rounded bg-deep-blue text-white font-medium outline-none"
             >
-              Login
-            </button>
-            {/* Spacer */}
-            <div className="flex justify-center py-2">--or--</div>
-            <button className="w-full py-2 px-4 rounded border border-solid border-gray-400 bg-white flex gap-4 justify-center">
-              <Icons.Google className="w-5 h-5" />
-              <span className="text-black font-medium">
-                Sign in with google
-              </span>
+              Register
             </button>
           </form>
+          {/* Image */}
+          <div>
+            <img
+              src={registerImg}
+              alt=""
+              className="max-w-[80%] md:max-w-full max-auto"
+            />
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
-export default Login;
+export default Register;

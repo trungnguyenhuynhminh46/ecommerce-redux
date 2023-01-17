@@ -68,4 +68,17 @@ svg.star-svg {
   .tab.active {
     @apply font-semibold;
   }
+
+  .input-group {
+    @apply flex flex-col gap-2 mb-2;
+  }
+
+  .input-group label {
+    @apply text-sm font-bold;
+  }
+
+  /* .input-group input[type="text"],
+  .input-group input[type="password"] {
+    @apply w-full outline-none p-2 rounded border border-solid border-gray-300 transition-all duration-300 ease-linear focus:border-gray-500;
+  } */
 }
