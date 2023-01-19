@@ -10,7 +10,7 @@ const Counter = () => {
   const [minutes, setMinutes] = useState<number>();
   const [seconds, setSeconds] = useState<number>();
 
-  let interval: number;
+  let interval: NodeJS.Timer;
 
   const countDown = () => {
     const destination = new Date(2023, 3, 1).getTime();
