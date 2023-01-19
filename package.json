@@ -9,8 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^3.10.0",
     "@hookform/resolvers": "^2.9.10",
     "@reduxjs/toolkit": "^1.9.1",
+    "@types/uuid": "^9.0.0",
     "firebase": "^9.15.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -18,7 +20,10 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.6.2",
     "react-simple-star-rating": "^5.1.7",
+    "react-toastify": "^9.1.1",
     "remixicon": "^2.5.0",
+    "sweetalert2": "^11.7.0",
+    "uuid": "^9.0.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {

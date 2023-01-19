@@ -11,6 +11,7 @@ import {
   Reset,
 } from "../pages";
 import { Routes, Route, Navigate } from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
 
 const Routers = () => {
   return (
@@ -19,7 +20,14 @@ const Routers = () => {
       <Route path="/shop" element={<Shop />} />
       <Route path="/shop/:id" element={<ProductDetails />} />
       <Route path="/cart" element={<Cart />} />
-      <Route path="/checkout" element={<CheckOut />} />
+      <Route
+        path="/checkout"
+        element={
+          <PrivateRoute>
+            <CheckOut />
+          </PrivateRoute>
+        }
+      />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/reset" element={<Reset />} />

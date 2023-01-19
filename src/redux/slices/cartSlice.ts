@@ -64,7 +64,7 @@ const cartSlice = createSlice({
         state.totalPayment -= existingItem.totalPrice;
       }
     },
-    deleteAllItem(state, action: PayloadAction<Product>) {
+    deleteAllItem(state, action) {
       state.cart = [];
       state.totalAmount = 0;
       state.totalPayment = 0;

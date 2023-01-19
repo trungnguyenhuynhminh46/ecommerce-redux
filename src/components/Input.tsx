@@ -8,7 +8,7 @@ interface InputProps {
   id: string;
   autoComplete?: string;
   placeholder?: string;
-  defaultValue: any;
+  defaultValue?: any;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   control: Control<FieldValues, any>;
 }
@@ -35,6 +35,18 @@ const Input: React.FC<InputProps> = ({
   const togglePassword = () => {
     setShowPassword((prev) => !prev);
   };
+  if (type === "hidden") {
+    return (
+      <input
+        {...field}
+        {...props}
+        type="hidden"
+        id={id}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+      />
+    );
+  }
   return (
     <div className="w-full outline-none p-2 rounded border border-solid border-gray-300 transition-all duration-300 ease-linear focus-within:border-gray-500 relative">
       <input
@@ -44,7 +56,7 @@ const Input: React.FC<InputProps> = ({
         id={id}
         placeholder={placeholder}
         autoComplete={autoComplete}
-        className="w-full border-none outline-none"
+        className="w-full border-none outline-none placeholder:text-sm"
       />
       {type === "password" && (
         <div

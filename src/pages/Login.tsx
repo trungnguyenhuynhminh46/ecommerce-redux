@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import loginImg from "../assets/images/login.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { FieldValues, useForm } from "react-hook-form";
+import { auth, db } from "../share/firebase";
+import { toast } from "react-toastify";
 // Components
 import Icons from "../components/Icons";
 import Input from "../components/Input";
+import {
+  AuthProvider,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 const schema = yup
   .object({
@@ -22,6 +31,7 @@ const schema = yup
   .required();
 
 const Login = () => {
+  const navigate = useNavigate();
   // States
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -31,6 +41,20 @@ const Login = () => {
   };
   const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+  const handleSignInWithProvider = async (provider: AuthProvider) => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      // Create user in database
+      await setDoc(doc(db, "users", result.user.uid), {
+        displayName: result.user.displayName,
+        email: result.user.displayName,
+        photoURL: result.user.photoURL,
+      });
+    } catch (err: any) {
+      const errorCode = err.code;
+      const errorMessage = err.message;
+    }
   };
 
   // React hook form
@@ -46,8 +70,19 @@ const Login = () => {
 
   const onSubmit = handleSubmit(async (data: FieldValues) => {
     try {
-      console.log(data);
-    } catch (err) {}
+      const { email, password } = data;
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      toast.success("Login successfully");
+      navigate("/");
+    } catch (err: any) {
+      const errorCode = err.code;
+      const errorMessage = err.message;
+      toast.error(errorMessage);
+    }
   });
 
   return (
@@ -120,7 +155,15 @@ const Login = () => {
             </button>
             {/* Spacer */}
             <div className="flex justify-center py-2">--or--</div>
-            <button className="w-full py-2 px-4 rounded border border-solid border-gray-400 bg-white flex gap-4 justify-center">
+            <button
+              type="button"
+              className="w-full py-2 px-4 rounded border border-solid border-gray-400 bg-white flex gap-4 justify-center"
+              onClick={() => {
+                handleSignInWithProvider(new GoogleAuthProvider());
+                toast.success("Login successfully");
+                navigate("/");
+              }}
+            >
               <Icons.Google className="w-5 h-5" />
               <span className="text-black font-medium">
                 Sign in with google

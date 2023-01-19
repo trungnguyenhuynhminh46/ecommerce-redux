@@ -6,11 +6,19 @@ import { Link } from "react-router-dom";
 import Icons from "../components/Icons";
 import { useForm, FieldValues } from "react-hook-form";
 import Input from "../components/Input";
-import { storage } from "../share/firebase";
+import { auth, db, storage } from "../share/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup
   .object({
+    displayName: yup
+      .string()
+      .required("Please enter your display name")
+      .min(5, "Display name must have at least 5 characters"),
     email: yup
       .string()
       .required("Please enter your email")
@@ -23,7 +31,9 @@ const schema = yup
   .required();
 
 const Register = () => {
+  const navigate = useNavigate();
   // State
+  const [displayName, setDisplayName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [imageURL, setImageURL] = useState<string>("");
@@ -33,6 +43,9 @@ const Register = () => {
   };
   const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+  };
+  const handleChangeDisplayName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDisplayName(e.target.value);
   };
   const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -52,7 +65,6 @@ const Register = () => {
       () => {
         // Handle successful uploads on complete
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          // console.log("File available at", downloadURL);
           setImageURL(downloadURL);
         });
       }
@@ -72,8 +84,28 @@ const Register = () => {
 
   const onSubmit = handleSubmit(async (data: FieldValues) => {
     try {
-      console.log(data, imageURL);
-    } catch (err) {}
+      const { displayName, email, password } = data;
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      // Update user
+      await updateProfile(userCredential.user, {
+        displayName: displayName,
+        photoURL: imageURL || "",
+      });
+      // Create user in database
+      await setDoc(doc(db, "users", userCredential.user.uid), {
+        displayName: displayName,
+        email,
+        photoURL: imageURL || "",
+      });
+      toast.success("Create user successfully");
+      navigate("/");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
   });
   return (
     <section>
@@ -92,6 +124,22 @@ const Register = () => {
                 Login
               </Link>
             </p>
+            <div className="input-group">
+              <label htmlFor="displayName">Display Name</label>
+              <Input
+                type="text"
+                name="displayName"
+                id="displayName"
+                defaultValue={displayName}
+                onChange={handleChangeDisplayName}
+                control={control}
+              />
+              <div className="min-h-[20px]">
+                <p className="text-sm text-red-600">
+                  {errors.displayName?.message?.toString()}
+                </p>
+              </div>
+            </div>
             <div className="input-group">
               <label htmlFor="email">Email</label>
               <Input
@@ -142,7 +190,7 @@ const Register = () => {
             </button>
           </form>
           {/* Image */}
-          <div>
+          <div className="flex items-center">
             <img
               src={registerImg}
               alt=""

@@ -9,6 +9,7 @@ import {
 // Components
 import Common from "../components/Common";
 import Tr from "../components/Tr";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const cartItems = useSelector(selectCartItems);
@@ -42,13 +43,17 @@ const Cart = () => {
             <span className="text-2xl font-bold">${totalPayment}</span>
           </div>
           <p className="text-sm text-gray-400">Taxes and shipping</p>
-          <div className="flex justify-between">
-            <button className="py-2 px-4 bg-deep-blue text-white rounded">
+          <div className="flex justify-around">
+            <Link to="/" className="py-2 px-4 bg-deep-blue text-white rounded">
               Continue Shopping
-            </button>
-            <button className="py-2 px-4 bg-deep-blue text-white rounded">
+            </Link>
+            <Link
+              to="/checkout"
+              className="py-2 px-4 bg-deep-blue text-white rounded"
+              hidden={!(totalAmount > 0)}
+            >
               Checkout
-            </button>
+            </Link>
           </div>
         </div>
       </div>

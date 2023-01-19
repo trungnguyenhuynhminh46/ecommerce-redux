@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { doc, getDoc } from "firebase/firestore";
+import { signOut } from "firebase/auth";
 // Assets
 import logo from "../assets/images/eco-logo.png";
 import user_icon from "../assets/images/user-icon.png";
+import { auth, db } from "../share/firebase";
 import { selectTotalAmount } from "../redux/selectors";
 // Components
 import { Link, NavLink } from "react-router-dom";
 import Icons from "./Icons";
+import { useAuth } from "../context/authContext";
 
 const menu_items = [
   {
@@ -27,8 +31,26 @@ const menu_items = [
 ];
 
 const Header = () => {
-  const [showMenu, setShowMenu] = useState<boolean>(false);
+  const { currentUser } = useAuth();
   const totalAmount = useSelector(selectTotalAmount);
+  // State
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [showOptions, setShowOptions] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<any>();
+  // Effect
+  useEffect(() => {
+    (async () => {
+      if (currentUser?.uid) {
+        const docSnap = await getDoc(doc(db, "users", currentUser.uid));
+        if (docSnap.exists()) {
+          setUserInfo({ uid: docSnap.id, ...docSnap.data() });
+        }
+      }
+    })();
+  }, [currentUser]);
+  // useEffect(() => {
+  //   console.log(userInfo);
+  // }, [userInfo]);
   return (
     <header className="h-[80px]">
       <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-40">
@@ -66,9 +88,81 @@ const Header = () => {
                 {totalAmount}
               </span>
             </NavLink>
-            <NavLink to="/login" className="relative">
-              <img src={user_icon} alt="" className="w-8 h-8 rounded-[50%]" />
-            </NavLink>
+            {currentUser?.uid ? (
+              <div
+                className="relative cursor-pointer"
+                onClick={() => {
+                  setShowOptions((prev) => !prev);
+                }}
+              >
+                <img
+                  src={
+                    currentUser.photoURL
+                      ? currentUser.photoURL
+                      : "/placeholder.png"
+                  }
+                  alt=""
+                  className="w-8 h-8 rounded-[50%]"
+                />
+                <div
+                  className={`flex flex-col p-2 bg-white absolute right-0 bottom-0 translate-y-[100px] shadow-lg rounded transition-all duration-300 ease-linear ${
+                    showOptions ? "visible opacity-100" : "invisible opacity-0"
+                  }`}
+                >
+                  <div>
+                    <Link
+                      to="/dashboard"
+                      className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear"
+                    >
+                      Dashboard
+                    </Link>
+                  </div>
+                  <div>
+                    <a
+                      href="#"
+                      className="w-full inline-block py-2 px-4 hover:bg-gray-100 transition-all duration-300 ease-linear"
+                      onClick={() => {
+                        signOut(auth);
+                        setShowOptions(false);
+                      }}
+                    >
+                      Log out
+                    </a>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div
+                className="relative cursor-pointer"
+                onClick={() => {
+                  setShowOptions((prev) => !prev);
+                }}
+              >
+                <img src={user_icon} alt="" className="w-8 h-8 rounded-[50%]" />
+                <div
+                  className={`flex flex-col p-2 bg-white absolute right-0 bottom-0 translate-y-[100px] shadow-lg rounded transition-all duration-300 ease-linear ${
+                    showOptions ? "visible opacity-100" : "invisible opacity-0"
+                  }`}
+                >
+                  <div>
+                    <Link
+                      to="/login"
+                      className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear"
+                    >
+                      Login
+                    </Link>
+                  </div>
+                  <div>
+                    <Link
+                      to="/register"
+                      className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear"
+                    >
+                      Register
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
           <button
             className="outline-none border-none flex justify-center items-center md:hidden z-30"
