@@ -78,8 +78,23 @@ svg.star-svg {
     @apply text-sm font-bold;
   }
 
-  /* .input-group input[type="text"],
-  .input-group input[type="password"] {
-    @apply w-full outline-none p-2 rounded border border-solid border-gray-300 transition-all duration-300 ease-linear focus:border-gray-500;
-  } */
+  .admin-nav-tab {
+    @apply py-2 px-3 text-black rounded transition-all duration-300 ease-linear;
+  }
+
+  .admin-nav-tab span {
+    @apply border-b border-solid border-transparent transition-all duration-300 ease-linear;
+  }
+
+  .admin-nav-tab span:hover {
+    @apply border-black;
+  }
+
+  .admin-nav-tab:hover {
+    @apply border-black;
+  }
+
+  .admin-nav-tab.active {
+    @apply bg-yellow-100;
+  }
 }

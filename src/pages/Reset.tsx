@@ -4,6 +4,10 @@ import resetImage from "../assets/images/forgot.png";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import { auth } from "../share/firebase";
+import { toast } from "react-toastify";
+import { sendPasswordResetEmail } from "firebase/auth";
+// Components
 import Input from "../components/Input";
 
 const schema = yup
@@ -35,9 +39,14 @@ const Reset = () => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      console.log(data);
-    } catch (err) {
-      console.log(err);
+      const { email } = data;
+      await sendPasswordResetEmail(auth, email);
+      toast.success(
+        "Reset email was sent. Follow the direction in the email to reset your password."
+      );
+    } catch (err: any) {
+      const message = err.message;
+      toast.error(message);
     }
   });
   return (
