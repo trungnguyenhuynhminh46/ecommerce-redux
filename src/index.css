@@ -74,8 +74,8 @@ svg.star-svg {
     @apply flex flex-col gap-2 mb-2;
   }
 
-  .input-group label {
-    @apply text-sm font-bold;
+  .input-group select {
+    @apply w-full outline-none p-[9px] rounded border border-solid border-gray-300;
   }
 
   .admin-nav-tab {
@@ -96,5 +96,19 @@ svg.star-svg {
 
   .admin-nav-tab.active {
     @apply bg-yellow-100;
+  }
+}
+
+@layer utilities {
+  .hidden-input {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap;
   }
 }

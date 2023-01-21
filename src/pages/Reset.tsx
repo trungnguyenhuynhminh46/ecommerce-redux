@@ -20,12 +20,6 @@ const schema = yup
   .required();
 
 const Reset = () => {
-  // States
-  const [email, setEmail] = useState("");
-  // Handlers
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
   // React hook form
   const {
     handleSubmit,
@@ -70,14 +64,7 @@ const Reset = () => {
             <h1 className="text-2xl font-bold">Register</h1>
             <div className="input-group">
               <label htmlFor="email">Email</label>
-              <Input
-                type="text"
-                name="email"
-                id="email"
-                defaultValue={email}
-                onChange={handleChangeEmail}
-                control={control}
-              />
+              <Input type="text" name="email" id="email" control={control} />
               <div className="min-h-[20px]">
                 <p className="text-sm text-red-600">
                   {errors.email?.message?.toString()}

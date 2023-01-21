@@ -33,20 +33,9 @@ const schema = yup
 const Register = () => {
   const navigate = useNavigate();
   // State
-  const [displayName, setDisplayName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [imageURL, setImageURL] = useState<string>("");
   // Handlers
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-  const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-  const handleChangeDisplayName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDisplayName(e.target.value);
-  };
+
   const handleUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const image = e.target.files[0];
@@ -130,8 +119,6 @@ const Register = () => {
                 type="text"
                 name="displayName"
                 id="displayName"
-                defaultValue={displayName}
-                onChange={handleChangeDisplayName}
                 control={control}
               />
               <div className="min-h-[20px]">
@@ -142,14 +129,7 @@ const Register = () => {
             </div>
             <div className="input-group">
               <label htmlFor="email">Email</label>
-              <Input
-                type="text"
-                name="email"
-                id="email"
-                defaultValue={email}
-                onChange={handleChangeEmail}
-                control={control}
-              />
+              <Input type="text" name="email" id="email" control={control} />
               <div className="min-h-[20px]">
                 <p className="text-sm text-red-600">
                   {errors.email?.message?.toString()}
@@ -162,8 +142,6 @@ const Register = () => {
                 type="password"
                 name="password"
                 id="password"
-                defaultValue={password}
-                onChange={handleChangePassword}
                 control={control}
               />
               <div className="min-h-[20px]">

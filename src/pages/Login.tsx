@@ -32,16 +32,6 @@ const schema = yup
 
 const Login = () => {
   const navigate = useNavigate();
-  // States
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  // Handlers
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-  const handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
   const handleSignInWithProvider = async (provider: AuthProvider) => {
     try {
       const result = await signInWithPopup(auth, provider);
@@ -114,14 +104,7 @@ const Login = () => {
             </p>
             <div className="input-group">
               <label htmlFor="email">Email</label>
-              <Input
-                type="text"
-                name="email"
-                id="email"
-                defaultValue={email}
-                onChange={handleChangeEmail}
-                control={control}
-              />
+              <Input type="text" name="email" id="email" control={control} />
               <div className="min-h-[20px]">
                 <p className="text-sm text-red-600">
                   {errors.email?.message?.toString()}
@@ -134,8 +117,6 @@ const Login = () => {
                 type="password"
                 name="password"
                 id="password"
-                defaultValue={password}
-                onChange={handleChangePassword}
                 control={control}
               />
               <div className="min-h-[20px]">

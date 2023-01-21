@@ -8,8 +8,6 @@ interface InputProps {
   id: string;
   autoComplete?: string;
   placeholder?: string;
-  defaultValue?: any;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   control: Control<FieldValues, any>;
 }
 
@@ -19,8 +17,6 @@ const Input: React.FC<InputProps> = ({
   id,
   autoComplete = "off",
   placeholder = "",
-  defaultValue,
-  onChange,
   control,
   ...props
 }) => {
@@ -28,7 +24,7 @@ const Input: React.FC<InputProps> = ({
   const { field } = useController({
     name,
     control,
-    defaultValue: defaultValue || "",
+    defaultValue: "",
   });
   //   Effect
   // Handlers
