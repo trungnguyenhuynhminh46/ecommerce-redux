@@ -1,7 +1,7 @@
 import React from "react";
 
 const UpdateCategory = () => {
-  return <div></div>;
+  return <div>Update category</div>;
 };
 
 export default UpdateCategory;

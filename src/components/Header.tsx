@@ -48,9 +48,6 @@ const Header = () => {
       }
     })();
   }, [currentUser]);
-  // useEffect(() => {
-  //   console.log(userInfo);
-  // }, [userInfo]);
   return (
     <header className="h-[80px]">
       <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-40">

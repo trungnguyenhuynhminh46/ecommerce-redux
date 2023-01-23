@@ -72,37 +72,7 @@ const CheckOut = () => {
     }
   }, []);
   // States
-  const [fullName, setFullName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [streetAddress, setStreetAddress] = useState<string>("");
-  const [city, setCity] = useState<string>("");
-  const [postalCode, setPostalCode] = useState<string>("");
-  const [country, setCountry] = useState<string>("");
   // Handlers
-  const handleChangeFullName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFullName(e.target.value);
-  };
-  const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-  const handleChangePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPhoneNumber(e.target.value);
-  };
-  const handleChangeStreetAddress = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setStreetAddress(e.target.value);
-  };
-  const handleChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCity(e.target.value);
-  };
-  const handleChangePostalCode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPostalCode(e.target.value);
-  };
-  const handleChangeCountry = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCountry(e.target.value);
-  };
   // React hooks form
   const {
     register,
@@ -195,8 +165,6 @@ const CheckOut = () => {
                 type="text"
                 name="fullName"
                 id="fullName"
-                defaultValue={fullName}
-                onChange={handleChangeFullName}
                 control={control}
                 placeholder="Please enter your full name"
               />
@@ -211,8 +179,6 @@ const CheckOut = () => {
                 type="text"
                 name="email"
                 id="email"
-                defaultValue={email}
-                onChange={handleChangeEmail}
                 control={control}
                 placeholder="Please enter your email"
               />
@@ -227,8 +193,6 @@ const CheckOut = () => {
                 type="text"
                 name="phoneNumber"
                 id="phoneNumber"
-                defaultValue={phoneNumber}
-                onChange={handleChangePhoneNumber}
                 control={control}
                 placeholder="Please enter your phone number"
               />
@@ -243,8 +207,6 @@ const CheckOut = () => {
                 type="text"
                 name="streetAddress"
                 id="streetAddress"
-                defaultValue={streetAddress}
-                onChange={handleChangeStreetAddress}
                 control={control}
                 placeholder="Please enter your street address"
               />
@@ -259,8 +221,6 @@ const CheckOut = () => {
                 type="text"
                 name="city"
                 id="city"
-                defaultValue={city}
-                onChange={handleChangeCity}
                 control={control}
                 placeholder="Please enter your city"
               />
@@ -275,8 +235,6 @@ const CheckOut = () => {
                 type="text"
                 name="postalCode"
                 id="postalCode"
-                defaultValue={postalCode}
-                onChange={handleChangePostalCode}
                 control={control}
                 placeholder="Please enter your postal Code"
               />
@@ -291,8 +249,6 @@ const CheckOut = () => {
                 type="text"
                 name="country"
                 id="country"
-                defaultValue={country}
-                onChange={handleChangeCountry}
                 control={control}
                 placeholder="Please enter your full name"
               />

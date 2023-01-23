@@ -97,6 +97,20 @@ svg.star-svg {
   .admin-nav-tab.active {
     @apply bg-yellow-100;
   }
+
+  .custom-table {
+    @apply relative overflow-x-auto;
+  }
+
+  .custom-table table {
+    @apply w-full text-sm text-left text-gray-500;
+  }
+  .custom-table thead {
+    @apply text-xs text-gray-700 uppercase bg-gray-50;
+  }
+  .custom-table tbody tr {
+    @apply bg-white border-b;
+  }
 }
 
 @layer utilities {

@@ -31,7 +31,7 @@ import productImg25 from "../images/wireless-03.png";
 const products = [
   {
     id: "01",
-    productName: "Stone and Beam Westview ",
+    productName: "Stone and Beam Westview",
     imgUrl: productImg01,
     category: "sofa",
     price: 193,

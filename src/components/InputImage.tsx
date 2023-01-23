@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Fragment } from "react";
+import React, { ChangeEvent, Fragment, useState } from "react";
 import {
   deleteObject,
   getDownloadURL,
@@ -12,20 +12,26 @@ interface Props {
   name: string;
   id: string;
   className?: string;
+  progress: number;
   onChange?: any;
   onDelete?: any;
   watch: UseFormWatch<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  defaultValue?: string;
 }
 
-export const useInputImage = (
+export const useInputImage: (
   watch: UseFormWatch<FieldValues>,
   setValue: UseFormSetValue<FieldValues>,
-  setProgress: React.Dispatch<React.SetStateAction<number>>,
-  imagePrefix: ""
+  imagePrefix: string
 ) => {
+  handleSelectImage: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleDeleteImageFromURL: (url: string) => Promise<void>;
+  progress: number;
+} = (watch, setValue, imagePrefix = "") => {
+  const [progress, setProgress] = useState<number>(0);
   const getPathStorageFromURL = (url: String) => {
-    const baseUrl =
-      "https://firebasestorage.googleapis.com/v0/b/ecommerse-redux.appspot.com/o/";
+    const baseUrl = import.meta.env.VITE_FIREBASE_STORAGE || "";
 
     let imagePath: string = url.replace(baseUrl, "");
 
@@ -39,14 +45,14 @@ export const useInputImage = (
   };
   const handleDeleteImageFromURL = async (url: string) => {
     try {
-      const imagePath = getPathStorageFromURL(url);
-      const imageRef = ref(storage, imagePath);
-      // Delete the file
-      await deleteObject(imageRef);
       // Reset fields
       setValue("image", null);
       setValue("imageURL", "");
       setProgress(0);
+      const imagePath = getPathStorageFromURL(url);
+      const imageRef = ref(storage, imagePath);
+      // Delete the file
+      await deleteObject(imageRef);
     } catch (err: any) {
       const message = err.message;
       console.log(message);
@@ -92,10 +98,11 @@ export const useInputImage = (
   return {
     handleSelectImage,
     handleDeleteImageFromURL,
+    progress,
   };
 };
 
-const InputImage: React.FC<any> = ({
+const InputImage: React.FC<Props> = ({
   name,
   id,
   className = "",
@@ -103,6 +110,7 @@ const InputImage: React.FC<any> = ({
   onChange = () => {},
   onDelete = () => {},
   watch,
+  setValue,
   ...props
 }) => {
   const watchImageURL = watch("imageURL");

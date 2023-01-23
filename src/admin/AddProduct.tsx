@@ -1,27 +1,54 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { v4 as uuid } from "uuid";
 import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  deleteObject,
-} from "firebase/storage";
+  collection,
+  doc,
+  getDoc,
+  orderBy,
+  query,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "../share/firebase";
+import useCollectionQuery from "../hooks/useCollectionQuery";
+import { useNavigate } from "react-router-dom";
+import { serverTimestamp } from "firebase/firestore";
 // Assets
-import { storage } from "../share/firebase";
 
 // Components
 import Label from "../components/Label";
 import Input from "../components/Input";
 import InputImage, { useInputImage } from "../components/InputImage";
+import { Category } from "../share/types";
+import { toast } from "react-toastify";
 
 const schema = yup.object({
   productName: yup.string().required("Please enter the product name"),
 });
 const AddProduct = () => {
-  const [progress, setProgress] = useState<number>(0);
+  const navigate = useNavigate();
+  const {
+    data: categoriesSnapshot,
+    loading: categoriesIsLoading,
+    error: categoriesHaveError,
+  } = useCollectionQuery(
+    "all-categories",
+    query(collection(db, "categories"), orderBy("createdAt", "desc"))
+  );
+  // States
+  const [categories, setCategories] = useState<Category[]>([]);
+  // Effect
+  useEffect(() => {
+    if (categoriesSnapshot) {
+      const catsList: any[] = [];
+      categoriesSnapshot?.forEach((doc) => {
+        catsList.push({ id: doc.id, ...doc.data() });
+      });
+      setCategories(catsList);
+    }
+  }, [categoriesSnapshot]);
   // React hook form
   const {
     watch,
@@ -37,22 +64,38 @@ const AddProduct = () => {
   });
   const watchProductName = watch("productName");
   // Use Image input
-  const { handleSelectImage, handleDeleteImageFromURL } = useInputImage(
-    watch,
-    setValue,
-    setProgress,
-    watchProductName
-  );
+  const { handleSelectImage, handleDeleteImageFromURL, progress } =
+    useInputImage(watch, setValue, watchProductName);
   // Handlers
   const onSubmit = handleSubmit(async (data: FieldValues) => {
     try {
       // console.log(data);
-      const { productName, shortDesc, description, category, price, imageURL } =
-        data;
+      const {
+        productName,
+        shortDesc,
+        description,
+        categoryID,
+        price,
+        imageURL,
+      } = data;
       // Add product
-      // ...
+      const productID = uuid();
+      const categoryDoc = await getDoc(doc(db, "categories", categoryID));
+      await setDoc(doc(db, "products", productID), {
+        productName,
+        imgURL: imageURL,
+        category: { id: categoryDoc.id, ...categoryDoc.data() },
+        price,
+        shortDesc,
+        description,
+        avgRating: 0,
+        createdAt: serverTimestamp(),
+      });
+      toast.success("Add product successfully!");
+      navigate("/dashboard/products");
     } catch (err: any) {
       const message = err.message;
+      toast.error(message);
     }
   });
 
@@ -124,9 +167,14 @@ const AddProduct = () => {
             </div>
             <div className="input-group">
               <Label htmlFor="price">Price</Label>
-              <select id="category" {...register("category")}>
-                <option value="category1">Category 1</option>
-                <option value="category2">Category 2</option>
+              <select id="categoryID" {...register("categoryID")}>
+                {categories.map((category) => {
+                  return (
+                    <option key={category.id} value={category.id}>
+                      {category.categoryName}
+                    </option>
+                  );
+                })}
               </select>
             </div>
           </div>
@@ -140,6 +188,7 @@ const AddProduct = () => {
               onChange={handleSelectImage}
               onDelete={handleDeleteImageFromURL}
               watch={watch}
+              setValue={setValue}
             />
           </div>
           <div className="mt-10">

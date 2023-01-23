@@ -25,4 +25,5 @@ Maltimart-ecommerce-start-up
 *.sw?
 note.txt
 db.txt
+.env*
 

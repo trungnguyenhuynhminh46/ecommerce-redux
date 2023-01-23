@@ -1,3 +1,10 @@
+import { Timestamp } from "firebase/firestore";
+
+interface Category {
+  id: string;
+  categoryName: string;
+  createdAt: Timestamp;
+}
 interface Product {
   id: string;
   productName: string;
@@ -21,4 +28,4 @@ interface CartItem {
   quantity: number;
   totalPrice: number;
 }
-export type { Product, CartItem };
+export type { Product, CartItem, Category };
