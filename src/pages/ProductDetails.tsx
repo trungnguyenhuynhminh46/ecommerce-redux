@@ -6,16 +6,26 @@ import { addOneItem } from "../redux/slices/cartSlice";
 import allProducts from "../assets/data/products";
 // Types
 import { Product } from "../share/types";
+import useDocumentQuery from "../hooks/useDocumentQuery";
+import { db } from "../share/firebase";
+import { collection, doc, orderBy, query } from "firebase/firestore";
 // Components
+import Layout from "../components/Layout";
 import Common from "../components/Common";
 import CustomRating from "../components/Rating";
 import { Rating } from "react-simple-star-rating";
 import { Link } from "react-router-dom";
 import ProductsList from "../components/ProductsList";
+import useCollectionQuery from "../hooks/useCollectionQuery";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { id: product_id } = useParams();
+  const {
+    data: allProductsSnapshot,
+    loading: allProductsIsLoading,
+    error: allProductsHaveError,
+  } = useCollectionQuery("products", collection(db, "products"));
   // States
   const [tabName, setTabName] = useState("description");
   const [product, setProduct] = useState<Product | undefined>(undefined);
@@ -25,17 +35,29 @@ const ProductDetails = () => {
   const [text, setText] = useState<string>("");
 
   useEffect(() => {
-    const chosenProduct = allProducts.find((product) => product.id === id);
-    setProduct(chosenProduct);
-  }, [id]);
+    if (product_id) {
+      allProductsSnapshot?.forEach((doc) => {
+        const prod: any = { id: doc.id, ...doc.data() };
+        if (prod.id === product_id) {
+          setProduct(prod);
+        }
+      });
+    }
+  }, [product_id, allProductsSnapshot]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     // Get the products with same category
-    let filteredProducts = allProducts.filter((item) => {
-      return item.category === product?.category && item.id !== product.id;
-    });
-    setSameCategory(filteredProducts);
+    if (product) {
+      let filteredProducts: any[] = [];
+      allProductsSnapshot?.forEach((doc) => {
+        const prod: any = { id: doc.id, ...doc.data() };
+        if (prod.category.id === product.category.id) {
+          filteredProducts.push(prod);
+        }
+      });
+      setSameCategory(filteredProducts);
+    }
   }, [product]);
   // Handlers
   const handleRating = (rate: number) => {
@@ -58,8 +80,13 @@ const ProductDetails = () => {
   };
 
   return (
-    <>
-      {product ? (
+    <Layout>
+      {allProductsIsLoading && (
+        <div className="h-[300px] flex justify-center items-center">
+          <div className="w-[30px] h-[30px] rounded-[50%] border-4 border-deep-blue border-t-transparent animate-spin"></div>
+        </div>
+      )}
+      {!allProductsIsLoading && product && (
         <>
           <Common title="Product info" />
           <div className="container">
@@ -67,7 +94,7 @@ const ProductDetails = () => {
             <div className="grid gap-20 grid-cols-1 mb-24 md:grid-cols-2">
               <div className="w-[80%] md:w-full mx-auto md:min-h-[540px]">
                 <img
-                  src={product?.imgUrl}
+                  src={product?.imgURL}
                   alt=""
                   className="w-full h-auto object-cover"
                 />
@@ -110,7 +137,7 @@ const ProductDetails = () => {
                   setTabName("reviews");
                 }}
               >
-                Reviews ({product.reviews.length})
+                Reviews ({product.reviews ? product.reviews.length : 0})
               </h1>
             </div>
             <div>
@@ -122,7 +149,7 @@ const ProductDetails = () => {
                 <div className="flex flex-col gap-10">
                   {/* reviews */}
                   <div className="px-10 flex flex-col gap-4">
-                    {product.reviews.map((review, index) => {
+                    {product.reviews?.map((review, index) => {
                       return (
                         <div key={index}>
                           <div className="flex gap-4">
@@ -186,7 +213,8 @@ const ProductDetails = () => {
             </div>
           </div>
         </>
-      ) : (
+      )}
+      {!allProductsIsLoading && !product && (
         <div className="py-32 text-center text-3xl font-semibold max-w-[800px] mx-auto flex flex-col items-center gap-10">
           It seems that the product your are looking for does not exist or has
           been removed
@@ -198,7 +226,7 @@ const ProductDetails = () => {
           </Link>
         </div>
       )}
-    </>
+    </Layout>
   );
 };
 

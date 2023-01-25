@@ -18,10 +18,11 @@ import Products from "../admin/Products";
 import Orders from "../admin/Orders";
 import AddCategory from "../admin/Categories";
 import AddProduct from "../admin/AddProduct";
-import UpdateCategory from "../admin/UpdateCategory";
 import UpdateProduct from "../admin/UpdateProduct";
 import Users from "../admin/Users";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../admin/Dashboard";
+import ShowOrders from "../pages/ShowOrders";
+import { useAuth } from "../context/authContext";
 
 const Routers = () => {
   return (
@@ -32,13 +33,13 @@ const Routers = () => {
       <Route path="/cart" element={<Cart />} />
       <Route path="/*" element={<PrivateRoute />}>
         <Route path="checkout" element={<CheckOut />} />
+        <Route path="orders" element={<ShowOrders />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="dashboard/orders" element={<Orders />} />
         <Route path="dashboard/products" element={<Products />} />
         <Route path="dashboard/products/add_product" element={<AddProduct />} />
         <Route path="dashboard/products/:id" element={<UpdateProduct />} />
         <Route path="dashboard/categories" element={<Categories />} />
-        <Route path="dashboard/categories/:id" element={<UpdateCategory />} />
         <Route path="dashboard/users" element={<Users />} />
       </Route>
       <Route path="/login" element={<Login />} />

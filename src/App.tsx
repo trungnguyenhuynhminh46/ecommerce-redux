@@ -1,9 +1,9 @@
-import Layout from "./components/Layout";
+import Routers from "./routers/Routers";
 import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <>
-      <Layout />
+      <Routers />
       <ToastContainer
         className="z-50"
         position="top-right"

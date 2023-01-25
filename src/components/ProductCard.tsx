@@ -21,7 +21,7 @@ const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
           className="block h-[240px] sm:h-[300px] w-auto mb-5 overflow-hidden"
         >
           <img
-            src={product.imgUrl}
+            src={product.imgURL}
             alt=""
             className="object-cover transition-all duration-300 ease-linear hover:scale-110"
           />
@@ -32,7 +32,7 @@ const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
               {product.productName}
             </h2>
           </Link>
-          <span className="text-sm">{product.category}</span>
+          <span className="text-sm">{product.category.categoryName}</span>
           <div className="mt-5 flex justify-between px-4">
             <span className="font-medium">${product.price}</span>
             <button

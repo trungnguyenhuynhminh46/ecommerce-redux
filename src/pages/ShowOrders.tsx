@@ -1,12 +1,22 @@
-import { collection, doc, orderBy, query, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import useCollectionQuery from "../hooks/useCollectionQuery";
 import { db } from "../share/firebase";
+import { useAuth } from "../context/authContext";
 // Components
 import Layout from "../components/Layout";
 import Badge from "../components/Badge";
+import Common from "../components/Common";
 
-const Orders = () => {
+const ShowOrders = () => {
+  const { currentUser } = useAuth();
   const {
     data: ordersSnapshot,
     loading: ordersIsLoading,
@@ -17,21 +27,25 @@ const Orders = () => {
   );
   const [orders, setOrders] = useState<any[]>([]);
   useEffect(() => {
-    if (!ordersSnapshot?.empty) {
+    if (!ordersSnapshot?.empty && currentUser.email) {
       const ordersList: any[] = [];
       ordersSnapshot?.forEach((docSnap) => {
-        ordersList.push({ id: docSnap.id, ...docSnap.data() });
+        const order: any = { id: docSnap.id, ...docSnap.data() };
+        if (order.email === currentUser.email) {
+          ordersList.push({ id: docSnap.id, ...docSnap.data() });
+        }
       });
       setOrders(ordersList);
     }
     if (ordersSnapshot?.empty) {
       setOrders([]);
     }
-  }, [ordersSnapshot]);
+  }, [ordersSnapshot, currentUser]);
   return (
     <Layout>
       <section>
-        <div className="container my-10">
+        <Common title="Orders" />
+        <div className="container">
           <div className="custom-table mt-12">
             {ordersIsLoading && (
               <div className="h-[300px] flex justify-center items-center">
@@ -48,7 +62,6 @@ const Orders = () => {
                     <th className="px-6 py-3">Quantity</th>
                     <th className="px-6 py-3">Total Payment</th>
                     <th className="px-6 py-3">Status</th>
-                    <th className="px-6 py-3">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -74,32 +87,6 @@ const Orders = () => {
                             </Badge>
                           )}
                         </td>
-                        <td className="px-6 py-4">
-                          {order.status === "waiting" && (
-                            <button
-                              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                              onClick={async () => {
-                                await updateDoc(doc(db, "orders", order.id), {
-                                  status: "confirmed",
-                                });
-                              }}
-                            >
-                              Confirmed
-                            </button>
-                          )}
-                          {order.status === "confirmed" && (
-                            <button
-                              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                              onClick={async () => {
-                                await updateDoc(doc(db, "orders", order.id), {
-                                  status: "waiting",
-                                });
-                              }}
-                            >
-                              Cancel
-                            </button>
-                          )}
-                        </td>
                       </tr>
                     );
                   })}
@@ -118,4 +105,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default ShowOrders;

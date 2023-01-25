@@ -21,6 +21,7 @@ import { Category } from "../share/types";
 // Assets
 import { db } from "../share/firebase";
 // Components
+import Layout from "../components/Layout";
 import Label from "../components/Label";
 import Input from "../components/Input";
 import Swal from "sweetalert2";
@@ -91,77 +92,79 @@ const Categories = () => {
     }
   };
   return (
-    <section className="min-h-[300px]">
-      <div className="container">
-        <div className="grid grid-cols-2 gap-5">
-          <div className="custom-table my-12">
-            {loading && (
-              <div className="h-[300px] flex justify-center items-center">
-                <div className="w-[30px] h-[30px] rounded-[50%] border-4 border-deep-blue border-t-transparent animate-spin"></div>
+    <Layout>
+      <section className="min-h-[300px]">
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <form action="#" onSubmit={onSubmit}>
+              <h1 className="text-2xl font-bold my-12">Add category</h1>
+              <div className="input-group">
+                <Label htmlFor="categoryName">Category Name</Label>
+                <Input
+                  type="text"
+                  control={control}
+                  name="categoryName"
+                  id="categoryName"
+                  autoComplete="off"
+                  placeholder="furniture"
+                />
               </div>
-            )}
-            {!loading && categories && categories.length > 0 && (
-              <table>
-                <thead>
-                  <tr>
-                    <th className="px-6 py-3">ID</th>
-                    <th className="px-6 py-3">Category Name</th>
-                    <th className="px-6 py-3">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {categories.map((category) => (
-                    <tr key={category.id}>
-                      <td className="px-6 py-4">{category.id}</td>
-                      <td className="px-6 py-4">{category.categoryName}</td>
-                      <td className="px-6 py-4">
-                        <button
-                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                          onClick={() => {
-                            handleDeleteCategory(category.id);
-                          }}
-                        >
-                          Delete
-                        </button>
-                      </td>
+              <div>
+                <button
+                  type="submit"
+                  className="py-2 px-4 mt-8 rounded bg-black text-white font-semibold flex justify-center items-center"
+                >
+                  Add category
+                </button>
+              </div>
+            </form>
+            <div className="custom-table my-12">
+              {loading && (
+                <div className="h-[300px] flex justify-center items-center">
+                  <div className="w-[30px] h-[30px] rounded-[50%] border-4 border-deep-blue border-t-transparent animate-spin"></div>
+                </div>
+              )}
+              {!loading && categories && categories.length > 0 && (
+                <table>
+                  <thead>
+                    <tr>
+                      <th className="px-6 py-3">ID</th>
+                      <th className="px-6 py-3">Category Name</th>
+                      <th className="px-6 py-3">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-            {!loading && (!categories || categories?.length === 0) && (
-              <div className="flex justify-center items-center">
-                <h1 className="text-2xl font-semibold">
-                  There's no category yet
-                </h1>
-              </div>
-            )}
+                  </thead>
+                  <tbody>
+                    {categories.map((category) => (
+                      <tr key={category.id}>
+                        <td className="px-6 py-4">{category.id}</td>
+                        <td className="px-6 py-4">{category.categoryName}</td>
+                        <td className="px-6 py-4">
+                          <button
+                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => {
+                              handleDeleteCategory(category.id);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {!loading && (!categories || categories?.length === 0) && (
+                <div className="flex justify-center items-center">
+                  <h1 className="text-2xl font-semibold">
+                    There's no category yet
+                  </h1>
+                </div>
+              )}
+            </div>
           </div>
-          <form action="#" onSubmit={onSubmit}>
-            <h1 className="text-2xl font-bold my-12">Add category</h1>
-            <div className="input-group">
-              <Label htmlFor="categoryName">Category Name</Label>
-              <Input
-                type="text"
-                control={control}
-                name="categoryName"
-                id="categoryName"
-                autoComplete="off"
-                placeholder="furniture"
-              />
-            </div>
-            <div>
-              <button
-                type="submit"
-                className="py-2 px-4 mt-8 rounded bg-black text-white font-semibold flex justify-center items-center"
-              >
-                Add category
-              </button>
-            </div>
-          </form>
         </div>
-      </div>
-    </section>
+      </section>
+    </Layout>
   );
 };
 

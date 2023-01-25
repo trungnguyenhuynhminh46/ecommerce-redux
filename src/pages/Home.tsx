@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 // Assets
 import heroImg from "../assets/images/hero-img.png";
 // Components
+import Layout from "../components/Layout";
 import Services from "./modules/home/Services";
 import Trending from "./modules/home/Trending";
 import BestSeller from "./modules/home/BestSeller";
 import NewArrivals from "./modules/home/NewArrivals";
 import Counter from "./modules/home/Counter";
 import Popular from "./modules/home/Popular";
+import useCollectionQuery from "../hooks/useCollectionQuery";
+import { collection, query, where } from "firebase/firestore";
+import { db } from "../share/firebase";
 
 const Home = () => {
   return (
-    <>
+    <Layout>
       {/* Hero */}
       <section className="bg-hero">
         <div className="container">
@@ -66,7 +70,7 @@ const Home = () => {
       <div className="container">
         <Popular />
       </div>
-    </>
+    </Layout>
     //
   );
 };

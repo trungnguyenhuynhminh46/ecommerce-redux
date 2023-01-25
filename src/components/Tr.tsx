@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { CartItem } from "../share/types";
 import {
   addOneItem,
@@ -9,6 +9,10 @@ import {
 import type { Product } from "../share/types";
 import allProducts from "../assets/data/products";
 import { useDispatch } from "react-redux";
+import useDocumentQuery from "../hooks/useDocumentQuery";
+import { db } from "../share/firebase";
+import { doc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 interface PropsTr {
   cartItem: CartItem;
@@ -16,7 +20,25 @@ interface PropsTr {
 
 const Tr: React.FC<PropsTr> = ({ cartItem }) => {
   const dispatch = useDispatch();
-  const product = allProducts.find((item) => item.id === cartItem.id);
+  const product_id = cartItem.id;
+  const {
+    data: productSnapshot,
+    loading: productIsLoading,
+    error: productHasError,
+  } = useDocumentQuery(
+    `product-${product_id}`,
+    doc(db, "products", product_id)
+  );
+  const [product, setProduct] = useState<Product | null>(null);
+  useEffect(() => {
+    if (productSnapshot?.exists()) {
+      const prod: any = { id: productSnapshot.id, ...productSnapshot.data() };
+      setProduct(prod);
+    }
+    if (!productSnapshot?.exists()) {
+      setProduct(null);
+    }
+  }, [productSnapshot]);
   return (
     <tr className="border-b border-solid border-gray-200">
       <td>
@@ -35,6 +57,8 @@ const Tr: React.FC<PropsTr> = ({ cartItem }) => {
             onClick={() => {
               if (product) {
                 dispatch(deleteOneItem(product));
+              } else {
+                toast.error("Product doesn't exist in the database");
               }
             }}
           >
@@ -48,6 +72,8 @@ const Tr: React.FC<PropsTr> = ({ cartItem }) => {
             onClick={() => {
               if (product) {
                 dispatch(addOneItem(product));
+              } else {
+                toast.error("Product doesn't exist in the database");
               }
             }}
           >
@@ -61,6 +87,8 @@ const Tr: React.FC<PropsTr> = ({ cartItem }) => {
           onClick={() => {
             if (product) {
               dispatch(deleteItem(product));
+            } else {
+              toast.error("Product doesn't exist in the database");
             }
           }}
         >

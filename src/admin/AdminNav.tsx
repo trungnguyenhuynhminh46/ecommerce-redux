@@ -10,7 +10,7 @@ import logo from "../assets/images/eco-logo.png";
 const AdminNav = () => {
   const { currentUser } = useAuth();
   // States
-  const [mainSearch, setMainSearch] = useState<string>("");
+  // const [mainSearch, setMainSearch] = useState<string>("");
   const [showOptions, setShowOptions] = useState<boolean>(false);
   // Effects
 
@@ -19,12 +19,12 @@ const AdminNav = () => {
       {/* Header */}
       <header className="bg-deep-blue text-white">
         <div className="container">
-          <div className="flex gap-14 py-5">
+          <div className="flex justify-between py-5">
             <Link to="/" className="flex gap-1 items-center">
               <img src={logo} alt="" className="w-6 h-auto invert" />
               <span className="font-bold">Multimart</span>
             </Link>
-            <input
+            {/* <input
               type="text"
               placeholder="Search products by product name..."
               className="flex-1 outline-none px-2 rounded text-black"
@@ -32,7 +32,7 @@ const AdminNav = () => {
               onChange={(e) => {
                 setMainSearch(e.target.value);
               }}
-            />
+            /> */}
             <div
               className="relative cursor-pointer"
               onClick={() => {

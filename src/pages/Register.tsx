@@ -12,6 +12,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
 
 const schema = yup
   .object({
@@ -97,87 +98,89 @@ const Register = () => {
     }
   });
   return (
-    <section>
-      <div className="container">
-        <div className="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 py-16">
-          {/* Form */}
-          <form
-            action="#"
-            className="flex flex-col justify-center gap-2"
-            onSubmit={onSubmit}
-          >
-            <h1 className="text-2xl font-bold">Register</h1>
-            <p className="text-sm text-gray-300 mb-4">
-              Already have an account,{" "}
-              <Link to="/login" className="font-semibold text-black">
-                Login
-              </Link>
-            </p>
-            <div className="input-group">
-              <label htmlFor="displayName">Display Name</label>
-              <Input
-                type="text"
-                name="displayName"
-                id="displayName"
-                control={control}
-              />
-              <div className="min-h-[20px]">
-                <p className="text-sm text-red-600">
-                  {errors.displayName?.message?.toString()}
-                </p>
-              </div>
-            </div>
-            <div className="input-group">
-              <label htmlFor="email">Email</label>
-              <Input type="text" name="email" id="email" control={control} />
-              <div className="min-h-[20px]">
-                <p className="text-sm text-red-600">
-                  {errors.email?.message?.toString()}
-                </p>
-              </div>
-            </div>
-            <div className="input-group">
-              <label htmlFor="password">Password</label>
-              <Input
-                type="password"
-                name="password"
-                id="password"
-                control={control}
-              />
-              <div className="min-h-[20px]">
-                <p className="text-sm text-red-600">
-                  {errors.password?.message?.toString()}
-                </p>
-              </div>
-            </div>
-            <div className="input-group">
-              <label htmlFor="avatar">Avatar</label>
-              <input
-                type="file"
-                accept="image/*"
-                name="avatar"
-                id="avatar"
-                onChange={handleUploadImage}
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full py-2 px-4 mt-2 rounded bg-deep-blue text-white font-medium outline-none"
+    <Layout>
+      <section>
+        <div className="container">
+          <div className="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 py-16">
+            {/* Form */}
+            <form
+              action="#"
+              className="flex flex-col justify-center gap-2"
+              onSubmit={onSubmit}
             >
-              Register
-            </button>
-          </form>
-          {/* Image */}
-          <div className="flex items-center">
-            <img
-              src={registerImg}
-              alt=""
-              className="max-w-[80%] md:max-w-full max-auto"
-            />
+              <h1 className="text-2xl font-bold">Register</h1>
+              <p className="text-sm text-gray-300 mb-4">
+                Already have an account,{" "}
+                <Link to="/login" className="font-semibold text-black">
+                  Login
+                </Link>
+              </p>
+              <div className="input-group">
+                <label htmlFor="displayName">Display Name</label>
+                <Input
+                  type="text"
+                  name="displayName"
+                  id="displayName"
+                  control={control}
+                />
+                <div className="min-h-[20px]">
+                  <p className="text-sm text-red-600">
+                    {errors.displayName?.message?.toString()}
+                  </p>
+                </div>
+              </div>
+              <div className="input-group">
+                <label htmlFor="email">Email</label>
+                <Input type="text" name="email" id="email" control={control} />
+                <div className="min-h-[20px]">
+                  <p className="text-sm text-red-600">
+                    {errors.email?.message?.toString()}
+                  </p>
+                </div>
+              </div>
+              <div className="input-group">
+                <label htmlFor="password">Password</label>
+                <Input
+                  type="password"
+                  name="password"
+                  id="password"
+                  control={control}
+                />
+                <div className="min-h-[20px]">
+                  <p className="text-sm text-red-600">
+                    {errors.password?.message?.toString()}
+                  </p>
+                </div>
+              </div>
+              <div className="input-group">
+                <label htmlFor="avatar">Avatar</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  name="avatar"
+                  id="avatar"
+                  onChange={handleUploadImage}
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2 px-4 mt-2 rounded bg-deep-blue text-white font-medium outline-none"
+              >
+                Register
+              </button>
+            </form>
+            {/* Image */}
+            <div className="flex items-center">
+              <img
+                src={registerImg}
+                alt=""
+                className="max-w-[80%] md:max-w-full max-auto"
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </Layout>
   );
 };
 

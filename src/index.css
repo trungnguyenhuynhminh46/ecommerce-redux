@@ -47,7 +47,7 @@ svg.star-svg {
   }
 
   .header {
-    @apply font-semibold text-3xl text-center mt-[100px];
+    @apply font-semibold text-3xl text-center mt-[100px] mb-5;
   }
 
   .custom-select {

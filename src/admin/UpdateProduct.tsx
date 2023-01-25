@@ -15,6 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { serverTimestamp } from "firebase/firestore";
 // Assets
+import Layout from "../components/Layout";
 import { db } from "../share/firebase";
 import { Category } from "../share/types";
 import InputImage, { useInputImage } from "../components/InputImage";
@@ -142,7 +143,7 @@ const UpdateProduct = () => {
   });
 
   return (
-    <>
+    <Layout>
       {productIsLoading && (
         <div className="h-[300px] flex justify-center items-center">
           <div className="w-[30px] h-[30px] rounded-[50%] border-4 border-deep-blue border-t-transparent animate-spin"></div>
@@ -257,7 +258,7 @@ const UpdateProduct = () => {
           </form>
         </div>
       )}
-    </>
+    </Layout>
   );
 };
 

@@ -102,10 +102,18 @@ const Header = () => {
                   className="w-8 h-8 rounded-[50%]"
                 />
                 <div
-                  className={`flex flex-col p-2 bg-white absolute right-0 bottom-0 translate-y-[100px] shadow-lg rounded transition-all duration-300 ease-linear ${
+                  className={`flex flex-col p-2 bg-white absolute right-0 bottom-0 translate-y-full shadow-lg rounded transition-all duration-300 ease-linear ${
                     showOptions ? "visible opacity-100" : "invisible opacity-0"
                   }`}
                 >
+                  <div>
+                    <Link
+                      to="/orders"
+                      className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear"
+                    >
+                      Orders
+                    </Link>
+                  </div>
                   <div>
                     <Link
                       to="/dashboard"

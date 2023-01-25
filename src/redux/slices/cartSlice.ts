@@ -26,17 +26,19 @@ const cartSlice = createSlice({
         state.cart.push({
           id: newItem.id,
           productName: newItem.productName,
-          image: newItem.imgUrl,
-          price: newItem.price,
+          image: newItem.imgURL,
+          price: Number(newItem.price),
           quantity: 1,
-          totalPrice: newItem.price,
+          totalPrice: Number(newItem.price),
         });
       } else {
         existingItem.quantity++;
         existingItem.totalPrice += existingItem.price;
       }
       state.totalAmount++;
-      state.totalPayment += newItem.price;
+      state.totalPayment = state.cart.reduce((total, item) => {
+        return total + Number(item.totalPrice);
+      }, 0);
     },
     deleteOneItem(state, action: PayloadAction<Product>) {
       const newItem = action.payload;
@@ -46,12 +48,16 @@ const cartSlice = createSlice({
           existingItem.quantity--;
           existingItem.totalPrice -= existingItem.price;
           state.totalAmount--;
-          state.totalPayment -= existingItem.price;
+          state.totalPayment = state.cart.reduce((total, item) => {
+            return total + Number(item.totalPrice);
+          }, 0);
         }
         if (existingItem.quantity === 1) {
           state.cart = state.cart.filter((item) => item.id !== existingItem.id);
           state.totalAmount--;
-          state.totalPayment -= existingItem.totalPrice;
+          state.totalPayment = state.cart.reduce((total, item) => {
+            return total + Number(item.totalPrice);
+          }, 0);
         }
       }
     },
@@ -61,7 +67,9 @@ const cartSlice = createSlice({
       if (existingItem) {
         state.cart = state.cart.filter((item) => item.id !== existingItem.id);
         state.totalAmount -= existingItem.quantity;
-        state.totalPayment -= existingItem.totalPrice;
+        state.totalPayment = state.cart.reduce((total, item) => {
+          return total + item.totalPrice;
+        }, 0);
       }
     },
     deleteAllItem(state, action) {

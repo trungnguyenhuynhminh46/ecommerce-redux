@@ -7,6 +7,7 @@ import {
   selectTotalPayment,
 } from "../redux/selectors";
 // Components
+import Layout from "../components/Layout";
 import Common from "../components/Common";
 import Tr from "../components/Tr";
 import { Link } from "react-router-dom";
@@ -16,7 +17,7 @@ const Cart = () => {
   const totalAmount = useSelector(selectTotalAmount);
   const totalPayment = useSelector(selectTotalPayment);
   return (
-    <div>
+    <Layout>
       <Common title="Shop cart" />
       {/* Cart */}
       <div className="container flex flex-col md:flex-row py-10">
@@ -57,7 +58,7 @@ const Cart = () => {
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

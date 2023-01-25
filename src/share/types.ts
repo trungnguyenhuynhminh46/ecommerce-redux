@@ -5,19 +5,39 @@ interface Category {
   categoryName: string;
   createdAt: Timestamp;
 }
+// interface Product {
+//   id: string;
+//   productName: string;
+//   imgUrl: string;
+//   category: string;
+//   price: number;
+//   shortDesc: string;
+//   description: string;
+//   reviews: {
+//     rating: number;
+//     text: string;
+//   }[];
+//   avgRating: number;
+// }
 interface Product {
   id: string;
   productName: string;
-  imgUrl: string;
-  category: string;
+  imgURL: string;
+  category: {
+    id: string;
+    categoryName: string;
+    createdAt: Timestamp;
+  };
   price: number;
   shortDesc: string;
   description: string;
-  reviews: {
+  reviews?: {
     rating: number;
     text: string;
   }[];
   avgRating: number;
+  createdAt: Timestamp;
+  updatedAt?: Timestamp;
 }
 
 interface CartItem {
