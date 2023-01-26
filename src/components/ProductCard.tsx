@@ -1,5 +1,7 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectFavoriteItems } from "../redux/selectors";
+import { addProduct, deleteProduct } from "../redux/slices/favoriteSlice";
 // Types
 import { Product } from "../share/types";
 // Assets
@@ -13,8 +15,37 @@ interface PropsProductCard {
 
 const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
   const dispatch = useDispatch();
+  const favoriteProducts = useSelector(selectFavoriteItems);
+  const [inFavorite, setInFavorite] = useState<boolean>(
+    !!favoriteProducts.find((item) => item.id === product.id)
+  );
+
   return (
-    <div className="basis-1/4 flex flex-col">
+    <div className="basis-1/4 flex flex-col relative">
+      {!inFavorite && (
+        <button
+          className="absolute top-[20px] right-[20px] bg-gray-50 rounded-[50%] w-[30px] h-[30px] text-red-600 z-20"
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch(addProduct(product));
+            setInFavorite(true);
+          }}
+        >
+          <i className="fa-regular fa-heart"></i>
+        </button>
+      )}
+      {inFavorite && (
+        <button
+          className="absolute top-[20px] right-[20px] bg-gray-50 rounded-[50%] w-[30px] h-[30px] text-red-600 z-20"
+          onClick={(e) => {
+            e.stopPropagation();
+            dispatch(deleteProduct(product.id));
+            setInFavorite(false);
+          }}
+        >
+          <i className="fa-solid fa-heart"></i>
+        </button>
+      )}
       <div className="mx-2 mb-10">
         <Link
           to={`/shop/${product.id}`}

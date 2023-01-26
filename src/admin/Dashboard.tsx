@@ -67,7 +67,7 @@ const Dashboard = () => {
               <span className="text-xl font-semibold">{ordersCount}</span>
             </div>
             <div className="flex flex-col gap-5 rounded p-5 bg-blue-200">
-              <span>Total Products</span>
+              <span>Saled Products</span>
               <span className="text-xl font-semibold">{itemsCount}</span>
             </div>
             <div className="flex flex-col gap-5 rounded p-5 bg-yellow-200">

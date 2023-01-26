@@ -152,7 +152,8 @@ const InputImage: React.FC<Props> = ({
           <button
             type="button"
             className="absolute left-0 top-0 w-full h-full flex justify-center items-center"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               //Delete image
               onDelete(watchImageURL);
             }}

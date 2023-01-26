@@ -21,23 +21,25 @@ const Cart = () => {
       <Common title="Shop cart" />
       {/* Cart */}
       <div className="container flex flex-col md:flex-row py-10">
-        <table className="basis-2/3">
-          <thead>
-            <tr className="py-4 border-b border-solid border-gray-200">
-              <th>Image</th>
-              <th>Product Name</th>
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Delete</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cartItems.map((cartItem) => {
-              return <Tr key={cartItem.id} cartItem={cartItem} />;
-            })}
-          </tbody>
-        </table>
+        <div className="custom-table basis-2/3">
+          <table>
+            <thead>
+              <tr>
+                <th className="px-6 py-4">Image</th>
+                <th className="px-6 py-4">Product Name</th>
+                <th className="px-6 py-4">Price</th>
+                <th className="px-6 py-4">Qty</th>
+                <th className="px-6 py-4">Delete</th>
+                <th className="px-6 py-4">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cartItems.map((cartItem) => {
+                return <Tr key={cartItem.id} cartItem={cartItem} />;
+              })}
+            </tbody>
+          </table>
+        </div>
         <div className="basis-1/3 flex flex-col gap-5 mt-10 ml-10">
           <div className="flex justify-between">
             <span className="text-lg font-semibold">Subtotal</span>

@@ -8,7 +8,14 @@ import allProducts from "../assets/data/products";
 import { Product } from "../share/types";
 import useDocumentQuery from "../hooks/useDocumentQuery";
 import { db } from "../share/firebase";
-import { collection, doc, orderBy, query } from "firebase/firestore";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  orderBy,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 // Components
 import Layout from "../components/Layout";
 import Common from "../components/Common";
@@ -17,6 +24,7 @@ import { Rating } from "react-simple-star-rating";
 import { Link } from "react-router-dom";
 import ProductsList from "../components/ProductsList";
 import useCollectionQuery from "../hooks/useCollectionQuery";
+import { toast } from "react-toastify";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
@@ -64,14 +72,26 @@ const ProductDetails = () => {
     setRating(rate);
   };
 
-  const handleSubmitReview = (e: ChangeEvent<HTMLFormElement>) => {
+  const handleSubmitReview = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     const review = {
       name,
       rating,
       text,
     };
-    console.log(review);
+    // Update doc
+    if (product) {
+      const reviews = product.reviews;
+      const totalPoints =
+        (reviews?.reduce((total: number, review) => total + review.rating, 0) ||
+          0) + rating;
+      const totalReviews = (reviews?.length || 0) + 1;
+      await updateDoc(doc(db, "products", product?.id), {
+        reviews: arrayUnion(review),
+        avgRating: totalPoints / totalReviews,
+      });
+      toast.success("Your review has been submit successfully!");
+    }
     // Clear state
     setName("");
     setText("");

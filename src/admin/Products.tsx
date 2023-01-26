@@ -17,8 +17,10 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import Pagination from "../components/Pagination";
+import { useAuth } from "../context/authContext";
 
 const Products = () => {
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
   const {
     data: productsSnapshot,
@@ -33,8 +35,17 @@ const Products = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
-
+  const [userInfo, setUserInfo] = useState<any>(undefined);
   // Effects
+  useEffect(() => {
+    (async () => {
+      const user_id = currentUser.uid;
+      if (user_id) {
+        const docSnap = await getDoc(doc(db, "users", user_id));
+        setUserInfo({ id: docSnap.id, ...docSnap.data() });
+      }
+    })();
+  }, [currentUser]);
   useEffect(() => {
     if (!productsSnapshot?.empty) {
       setCurrentPage(1);
@@ -90,25 +101,30 @@ const Products = () => {
 
   const handleDeleteProduct = async (product_id: string) => {
     try {
-      const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-      });
-      if (result.isConfirmed) {
-        const docSnap = await getDoc(doc(db, "products", product_id));
-        const product: any = { id: docSnap.id, ...docSnap.data() };
-        // Delete product picture
-        if (product.imgURL) {
-          await handleDeleteImageFromURL(product.imgURL);
+      if (userInfo && userInfo.role === "admin") {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        });
+        if (result.isConfirmed) {
+          const docSnap = await getDoc(doc(db, "products", product_id));
+          const product: any = { id: docSnap.id, ...docSnap.data() };
+          // Delete product picture
+          if (product.imgURL) {
+            await handleDeleteImageFromURL(product.imgURL);
+          }
+          // Delete product
+          await deleteDoc(doc(db, "products", product_id));
+          toast.success("The product has been deleted");
         }
-        // Delete product
-        await deleteDoc(doc(db, "products", product_id));
-        toast.success("The product has been deleted");
+      }
+      if (userInfo && userInfo.role !== "admin") {
+        Swal.fire("You don't have permission to perform this action");
       }
     } catch (error: any) {
       const message = error.message;
@@ -116,7 +132,12 @@ const Products = () => {
     }
   };
   const handleUpdateProduct = (product_id: string) => {
-    navigate(`/dashboard/products/${product_id}`);
+    if (userInfo && userInfo.role === "admin") {
+      navigate(`/dashboard/products/${product_id}`);
+    }
+    if (userInfo && userInfo.role !== "admin") {
+      Swal.fire("You don't have permission to perform this action");
+    }
   };
   const handleChangeSearch = _.debounce(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,7 +255,7 @@ const Products = () => {
                           <td className="px-6 py-4">
                             <div className="flex gap-5">
                               <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded border-none"
                                 onClick={() => {
                                   handleUpdateProduct(product.id);
                                 }}
@@ -242,7 +263,7 @@ const Products = () => {
                                 Update
                               </button>
                               <button
-                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded border-none"
                                 onClick={() => {
                                   handleDeleteProduct(product.id);
                                 }}

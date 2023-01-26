@@ -39,9 +39,12 @@ const Login = () => {
       // Create user in database
       await setDoc(doc(db, "users", result.user.uid), {
         displayName: result.user.displayName,
-        email: result.user.displayName,
+        email: result.user.email,
         photoURL: result.user.photoURL,
+        role: "normal",
       });
+      toast.success("Login successfully");
+      navigate("/");
     } catch (err: any) {
       const errorCode = err.code;
       const errorMessage = err.message;
@@ -143,8 +146,6 @@ const Login = () => {
                 className="w-full py-2 px-4 rounded border border-solid border-gray-400 bg-white flex gap-4 justify-center"
                 onClick={() => {
                   handleSignInWithProvider(new GoogleAuthProvider());
-                  toast.success("Login successfully");
-                  navigate("/");
                 }}
               >
                 <Icons.Google className="w-5 h-5" />

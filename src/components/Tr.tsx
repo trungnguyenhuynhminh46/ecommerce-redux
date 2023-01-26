@@ -40,7 +40,7 @@ const Tr: React.FC<PropsTr> = ({ cartItem }) => {
     }
   }, [productSnapshot]);
   return (
-    <tr className="border-b border-solid border-gray-200">
+    <tr className="border-b border-solid border-gray-200 px-6 py-3">
       <td>
         <img
           src={cartItem.image}

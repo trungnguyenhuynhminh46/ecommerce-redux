@@ -90,6 +90,7 @@ const Register = () => {
         displayName: displayName,
         email,
         photoURL: imageURL || "",
+        role: "normal",
       });
       toast.success("Create user successfully");
       navigate("/");

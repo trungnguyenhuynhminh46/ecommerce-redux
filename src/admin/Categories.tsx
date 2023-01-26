@@ -9,14 +9,14 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
-  onSnapshot,
+  getDoc,
   orderBy,
   query,
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
 import _ from "lodash";
+import { useAuth } from "../context/authContext";
 // Types
 import { Category } from "../share/types";
 // Assets
@@ -33,16 +33,27 @@ const schema = yup.object({
 });
 
 const Categories = () => {
+  const { currentUser } = useAuth();
   const { data, loading, error } = useCollectionQuery(
     "all-categories",
     query(collection(db, "categories"), orderBy("createdAt", "desc"))
   );
   // States
   const NUMBER_PER_PAGE = 4;
+  const [userInfo, setUserInfo] = useState<any>(undefined);
   const [categories, setCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   // Effect
+  useEffect(() => {
+    (async () => {
+      const user_id = currentUser.uid;
+      if (user_id) {
+        const docSnap = await getDoc(doc(db, "users", user_id));
+        setUserInfo({ id: docSnap.id, ...docSnap.data() });
+      }
+    })();
+  }, [currentUser]);
   useEffect(() => {
     if (!data?.empty) {
       setCurrentPage(1);
@@ -91,18 +102,23 @@ const Categories = () => {
   });
   const handleDeleteCategory = async (category_id: string) => {
     try {
-      const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!",
-      });
-      if (result.isConfirmed) {
-        await deleteDoc(doc(db, "categories", category_id));
-        toast.success("The category has been deleted");
+      if (userInfo && userInfo.role === "admin") {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        });
+        if (result.isConfirmed) {
+          await deleteDoc(doc(db, "categories", category_id));
+          toast.success("The category has been deleted");
+        }
+      }
+      if (userInfo && userInfo.role !== "admin") {
+        Swal.fire("You don't have permission to perform this action");
       }
     } catch (error: any) {
       const message = error.message;
@@ -198,7 +214,7 @@ const Categories = () => {
                           <td className="px-6 py-4">{category.categoryName}</td>
                           <td className="px-6 py-4">
                             <button
-                              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded border-none"
                               onClick={() => {
                                 handleDeleteCategory(category.id);
                               }}

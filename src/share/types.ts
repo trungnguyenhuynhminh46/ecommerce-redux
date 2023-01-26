@@ -5,20 +5,6 @@ interface Category {
   categoryName: string;
   createdAt: Timestamp;
 }
-// interface Product {
-//   id: string;
-//   productName: string;
-//   imgUrl: string;
-//   category: string;
-//   price: number;
-//   shortDesc: string;
-//   description: string;
-//   reviews: {
-//     rating: number;
-//     text: string;
-//   }[];
-//   avgRating: number;
-// }
 interface Product {
   id: string;
   productName: string;
@@ -32,6 +18,7 @@ interface Product {
   shortDesc: string;
   description: string;
   reviews?: {
+    name: string;
     rating: number;
     text: string;
   }[];

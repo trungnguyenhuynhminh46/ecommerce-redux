@@ -6,7 +6,7 @@ import { signOut } from "firebase/auth";
 import logo from "../assets/images/eco-logo.png";
 import user_icon from "../assets/images/user-icon.png";
 import { auth, db } from "../share/firebase";
-import { selectTotalAmount } from "../redux/selectors";
+import { selectFavoriteItems, selectTotalAmount } from "../redux/selectors";
 // Components
 import { Link, NavLink } from "react-router-dom";
 import Icons from "./Icons";
@@ -31,6 +31,7 @@ const menu_items = [
 ];
 
 const Header = () => {
+  const favoriteProducts = useSelector(selectFavoriteItems);
   const { currentUser } = useAuth();
   const totalAmount = useSelector(selectTotalAmount);
   // State
@@ -76,7 +77,7 @@ const Header = () => {
             <NavLink to="/favorite" className="relative">
               <Icons.Heart />
               <span className="absolute top-0 right-0 translate-x-3/4 -translate-y-3/4 w-5 h-5 rounded-[50%] flex justify-center items-center text-sm text-white bg-red-600">
-                10
+                {favoriteProducts.length}
               </span>
             </NavLink>
             <NavLink to="/cart" className="relative">
@@ -85,7 +86,7 @@ const Header = () => {
                 {totalAmount}
               </span>
             </NavLink>
-            {currentUser?.uid ? (
+            {userInfo?.uid ? (
               <div
                 className="relative cursor-pointer"
                 onClick={() => {
@@ -94,9 +95,7 @@ const Header = () => {
               >
                 <img
                   src={
-                    currentUser.photoURL
-                      ? currentUser.photoURL
-                      : "/placeholder.png"
+                    userInfo.photoURL ? userInfo.photoURL : "/placeholder.png"
                   }
                   alt=""
                   className="w-8 h-8 rounded-[50%]"
@@ -106,7 +105,7 @@ const Header = () => {
                     showOptions ? "visible opacity-100" : "invisible opacity-0"
                   }`}
                 >
-                  <div>
+                  <div className="whitespace-nowrap">
                     <Link
                       to="/orders"
                       className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear"
@@ -114,15 +113,18 @@ const Header = () => {
                       Orders
                     </Link>
                   </div>
-                  <div>
-                    <Link
-                      to="/dashboard"
-                      className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear"
-                    >
-                      Dashboard
-                    </Link>
-                  </div>
-                  <div>
+                  {(userInfo.role == "admin" || userInfo.role == "tester") && (
+                    <div className="whitespace-nowrap">
+                      <Link
+                        to="/dashboard"
+                        className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear"
+                      >
+                        Dashboard
+                      </Link>
+                    </div>
+                  )}
+
+                  <div className="whitespace-nowrap">
                     <a
                       href="#"
                       className="w-full inline-block py-2 px-4 hover:bg-gray-100 transition-all duration-300 ease-linear"
@@ -152,7 +154,7 @@ const Header = () => {
                   <div>
                     <Link
                       to="/login"
-                      className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear"
+                      className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear whitespace-nowrap"
                     >
                       Login
                     </Link>
@@ -160,7 +162,7 @@ const Header = () => {
                   <div>
                     <Link
                       to="/register"
-                      className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear"
+                      className="w-full inline-block py-2 px-4 hover:bg-gray-100 border-b border-solid border-gray-200 transition-all duration-300 ease-linear whitespace-nowrap"
                     >
                       Register
                     </Link>

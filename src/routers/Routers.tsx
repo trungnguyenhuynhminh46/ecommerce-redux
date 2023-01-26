@@ -22,6 +22,7 @@ import UpdateProduct from "../admin/UpdateProduct";
 import Users from "../admin/Users";
 import Dashboard from "../admin/Dashboard";
 import ShowOrders from "../pages/ShowOrders";
+import WishList from "../pages/WishList";
 import { useAuth } from "../context/authContext";
 
 const Routers = () => {
@@ -31,6 +32,7 @@ const Routers = () => {
       <Route path="/shop" element={<Shop />} />
       <Route path="/shop/:id" element={<ProductDetails />} />
       <Route path="/cart" element={<Cart />} />
+      <Route path="/favorite" element={<WishList />} />
       <Route path="/*" element={<PrivateRoute />}>
         <Route path="checkout" element={<CheckOut />} />
         <Route path="orders" element={<ShowOrders />} />
