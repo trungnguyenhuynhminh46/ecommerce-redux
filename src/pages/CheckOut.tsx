@@ -13,13 +13,14 @@ import emailjs from "@emailjs/browser";
 import { v4 as uuid } from "uuid";
 import { useNavigate } from "react-router-dom";
 import { deleteAllItem } from "../redux/slices/cartSlice";
-import { serverTimestamp } from "firebase/firestore";
+import { getDoc, serverTimestamp } from "firebase/firestore";
 // Components
 import Layout from "../components/Layout";
 import Input from "../components/Input";
 import Swal from "sweetalert2";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../share/firebase";
+import { useAuth } from "../context/authContext";
 
 const tax_ratio = 0.1; // 10%
 const schema = yup.object({
@@ -57,6 +58,7 @@ const schema = yup.object({
 });
 
 const CheckOut = () => {
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const formRef = useRef<any>();
@@ -73,10 +75,24 @@ const CheckOut = () => {
     }
   }, []);
   // States
+  const [userInfo, setUserInfo] = useState<any>(undefined);
+  useEffect(() => {
+    (async () => {
+      if (currentUser.uid) {
+        const user_id = currentUser.uid;
+        const docSnap = await getDoc(doc(db, "users", user_id));
+        if (docSnap.exists()) {
+          setUserInfo({ id: docSnap.id, ...docSnap.data() });
+        }
+      }
+    })();
+  }, [currentUser]);
+
   // Handlers
   // React hooks form
   const {
     register,
+    reset,
     handleSubmit,
     control,
     formState: { errors },
@@ -86,54 +102,64 @@ const CheckOut = () => {
     reValidateMode: "onChange",
   });
 
+  useEffect(() => {
+    if (userInfo) {
+      let defaultValues: any = {};
+      defaultValues.email = userInfo.email;
+      reset(defaultValues);
+    }
+  }, [userInfo]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const {
-        order_id,
-        total_payment,
-        email,
-        fullName,
-        phoneNumber,
-        streetAddress,
-        city,
-        postalCode,
-        country,
-      } = data;
-      // set order document
-      await setDoc(doc(db, "orders", order_id), {
-        cart_items,
-        quantity,
-        total_payment,
-        email,
-        fullName,
-        phoneNumber,
-        streetAddress,
-        city,
-        postalCode,
-        country,
-        createdAt: serverTimestamp(),
-        status: "waiting",
-      });
-      // Send email
-      emailjs.sendForm(
-        "service_wigfx2t",
-        "template_mtng3lb",
-        formRef.current,
-        "UacrM18BertjSOKq8"
-      );
-      // Success: clear cart, alert (OK), redirect (OK)
+      if (userInfo) {
+        const {
+          order_id,
+          total_payment,
+          email,
+          fullName,
+          phoneNumber,
+          streetAddress,
+          city,
+          postalCode,
+          country,
+        } = data;
+        // set order document
+        await setDoc(doc(db, "orders", order_id), {
+          cart_items,
+          quantity,
+          total_payment,
+          email,
+          fullName,
+          phoneNumber,
+          streetAddress,
+          city,
+          postalCode,
+          country,
+          createdAt: serverTimestamp(),
+          status: "waiting",
+        });
+        // Send email
+        emailjs.sendForm(
+          "service_wigfx2t",
+          "template_mtng3lb",
+          formRef.current,
+          "UacrM18BertjSOKq8"
+        );
+        // Success: clear cart, alert (OK), redirect (OK)
 
-      const result = await Swal.fire({
-        icon: "success",
-        title: "Order confirmed, please check the email",
-        timer: 3000,
-        confirmButtonText: "OK",
-      });
-      if (result.isConfirmed) {
-        dispatch(deleteAllItem(undefined));
+        const result = await Swal.fire({
+          icon: "success",
+          title: "Order confirmed, please check the email",
+          timer: 3000,
+          confirmButtonText: "OK",
+        });
+        if (result.isConfirmed) {
+          dispatch(deleteAllItem(undefined));
+          navigate("/");
+        }
         navigate("/");
       }
-      navigate("/");
     } catch (err: any) {
       const mesage = err.message;
     }
@@ -184,6 +210,7 @@ const CheckOut = () => {
                   id="email"
                   control={control}
                   placeholder="Please enter your email"
+                  readOnly={true}
                 />
                 <div className="min-h-[20px]">
                   <p className="text-sm text-red-600">
@@ -253,7 +280,7 @@ const CheckOut = () => {
                   name="country"
                   id="country"
                   control={control}
-                  placeholder="Please enter your full name"
+                  placeholder="Please enter your country"
                 />
                 <div className="min-h-[20px]">
                   <p className="text-sm text-red-600">

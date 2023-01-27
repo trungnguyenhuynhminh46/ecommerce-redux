@@ -8,6 +8,7 @@ import { Product } from "../share/types";
 import { addOneItem } from "../redux/slices/cartSlice";
 // Components
 import { Link } from "react-router-dom";
+import Rating from "./Rating";
 
 interface PropsProductCard {
   product: Product;
@@ -57,6 +58,10 @@ const ProductCard: React.FC<PropsProductCard> = ({ product }) => {
             className="object-cover transition-all duration-300 ease-linear hover:scale-110"
           />
         </Link>
+        <div className="flex gap-2">
+          <Rating avgRating={product.avgRating} />{" "}
+          <span className="text-sm font-normal">({product.avgRating})</span>
+        </div>
         <div>
           <Link to={`/shop/${product.id}`}>
             <h2 className="font-semibold leading-tight">

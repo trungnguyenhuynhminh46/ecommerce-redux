@@ -11,7 +11,7 @@ const Common: React.FC<PropsCommon> = ({ title }) => {
     <section
       className="relative w-full h-[200px] flex justify-center items-center"
       style={{
-        background: "url(/src/assets/images/common.avif)",
+        background: "url(src/assets/images/common.avif)",
         backgroundSize: "cover",
       }}
     >

@@ -27,7 +27,12 @@ import { toast } from "react-toastify";
 
 const schema = yup.object({
   productName: yup.string().required("Please enter the product name"),
+  shortDesc: yup.string().required("Please enter the short description"),
+  description: yup.string().required("Please enter the product description"),
+  price: yup.number().required("Please enter the product price"),
+  imageURL: yup.string().required("Please chose an product image"),
 });
+
 const AddProduct = () => {
   const navigate = useNavigate();
   const {
@@ -178,6 +183,11 @@ const AddProduct = () => {
                     );
                   })}
                 </select>
+                <div className="min-h-[20px]">
+                  <p className="text-sm text-red-600">
+                    {errors.categoryID?.message?.toString()}
+                  </p>
+                </div>
               </div>
             </div>
             <div className="input-group">
@@ -192,6 +202,11 @@ const AddProduct = () => {
                 watch={watch}
                 setValue={setValue}
               />
+              <div className="min-h-[20px]">
+                <p className="text-sm text-red-600">
+                  {errors.imageURL?.message?.toString()}
+                </p>
+              </div>
             </div>
             <div className="mt-10">
               <button

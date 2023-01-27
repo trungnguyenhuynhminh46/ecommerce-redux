@@ -26,6 +26,10 @@ import Input from "../components/Input";
 
 const schema = yup.object({
   productName: yup.string().required("Please enter the product name"),
+  shortDesc: yup.string().required("Please enter the short description"),
+  description: yup.string().required("Please enter the product description"),
+  price: yup.number().required("Please enter the product price"),
+  imageURL: yup.string().required("Please chose an product image"),
 });
 const UpdateProduct = () => {
   const { id: product_id } = useParams();
@@ -68,13 +72,6 @@ const UpdateProduct = () => {
       setCategories(catsList);
     }
   }, [categoriesSnapshot]);
-
-  // useEffect(() => {
-  //   console.log(product);
-  // }, [product]);
-  // useEffect(() => {
-  //   console.log(categories);
-  // }, [categories]);
 
   // React hook form
   const {
@@ -209,7 +206,7 @@ const UpdateProduct = () => {
               <div className="input-group">
                 <Label htmlFor="price">Price</Label>
                 <Input
-                  type="text"
+                  type="number"
                   name="price"
                   id="price"
                   placeholder="Lorem, ipsum dolor..."
@@ -222,7 +219,7 @@ const UpdateProduct = () => {
                 </div>
               </div>
               <div className="input-group">
-                <Label htmlFor="price">Price</Label>
+                <Label htmlFor="price">Category</Label>
                 <select id="categoryID" {...register("categoryID")}>
                   {categories.map((category) => {
                     return (
@@ -232,6 +229,11 @@ const UpdateProduct = () => {
                     );
                   })}
                 </select>
+                <div className="min-h-[20px]">
+                  <p className="text-sm text-red-600">
+                    {errors.categoryID?.message?.toString()}
+                  </p>
+                </div>
               </div>
             </div>
             <div className="input-group">
@@ -246,6 +248,11 @@ const UpdateProduct = () => {
                 watch={watch}
                 setValue={setValue}
               />
+              <div className="min-h-[20px]">
+                <p className="text-sm text-red-600">
+                  {errors.imageURL?.message?.toString()}
+                </p>
+              </div>
             </div>
             <div className="mt-10">
               <button

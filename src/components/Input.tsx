@@ -9,6 +9,7 @@ interface InputProps {
   autoComplete?: string;
   placeholder?: string;
   control: Control<FieldValues, any>;
+  readOnly?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -18,6 +19,7 @@ const Input: React.FC<InputProps> = ({
   autoComplete = "off",
   placeholder = "",
   control,
+  readOnly = false,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -40,6 +42,7 @@ const Input: React.FC<InputProps> = ({
         id={id}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        readOnly={readOnly}
       />
     );
   }
@@ -52,6 +55,7 @@ const Input: React.FC<InputProps> = ({
         id={id}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        readOnly={readOnly}
         className="w-full border-none outline-none placeholder:text-sm"
       />
       {type === "password" && (
