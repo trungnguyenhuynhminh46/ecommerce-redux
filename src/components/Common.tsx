@@ -1,4 +1,5 @@
 import React from "react";
+import background from "../assets/images/common.avif";
 // Assets
 import commonImage from "../assets/images/common.avif";
 
@@ -10,11 +11,7 @@ const Common: React.FC<PropsCommon> = ({ title }) => {
   return (
     <section className="relative w-full h-[200px] flex justify-center items-center">
       {/* Background */}
-      <img
-        src="src/assets/images/common.avif"
-        alt=""
-        className="h-full w-full object-cover z-0"
-      />
+      <img src={background} alt="" className="h-full w-full object-cover z-0" />
       {/* overlay */}
       <div className="absolute inset-0 bg-gray-900 opacity-60 flex justify-center items-center z-10"></div>
       {/* Content */}
