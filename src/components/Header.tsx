@@ -130,6 +130,7 @@ const Header = () => {
                       className="w-full inline-block py-2 px-4 hover:bg-gray-100 transition-all duration-300 ease-linear"
                       onClick={() => {
                         signOut(auth);
+                        window.location.reload();
                         setShowOptions(false);
                       }}
                     >
